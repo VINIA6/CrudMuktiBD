@@ -42,9 +42,19 @@ async function main() {
     //Sincronizando com tabela Heoris
     await Herois.sync()
 
+    //Realizando inserção 
+    await Herois.create({
+        nome:'Lanterna Verde',
+        poder:'Energia do anel'
+    })
+
+    //
+
     //Realizando consulta
     const result = await Herois.findAll({ raw: true })
     console.log('result', result)
+
+    
 }
 
 main()
