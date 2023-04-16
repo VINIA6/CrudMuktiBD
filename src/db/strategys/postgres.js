@@ -69,7 +69,7 @@ class Postgres extends ICrud {
     async update(item,id) {
         console.log('item',item)
         console.log('id',id)
-        // Por terminar 
+        // Por terminar :
         const result = await this._herois.update(item, { where: {id:id}})
         console.log('----->',result)
     }
