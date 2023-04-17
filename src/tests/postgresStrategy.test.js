@@ -18,7 +18,8 @@ describe('Postgres Strategy', function () {
     this.timeout(Infinity)
     this.beforeAll(async ()=>{
         await context.connect()
-        await context.create(HEROI_EDITAR)
+        await context.delete()
+        await context.create(HEROI_EDITAR) 
     })
 
     it('Connection PostgresSQL  Test', async () => {
@@ -40,23 +41,25 @@ describe('Postgres Strategy', function () {
 
         assert.deepEqual(result, HEROI_CADASTRAR)
     })
-    it.only('Postgres UPDATE Test', async () => {
+    it('Postgres UPDATE Test', async () => {
         const [dataAtualizar] = await context.read({nome:HEROI_EDITAR.nome})
 
         const novoItem = {
            ...dataAtualizar,
            nome: 'Goku',
         }
-        console.log('Atualizar',dataAtualizar) 
-        console.log('NovoItem',novoItem) 
-        const result = await context.update(novoItem, dataAtualizar.id)
-        console.log(result)
         
-        assert.equal(result, 1)
+        const [result] = await context.update(novoItem, dataAtualizar.id)
+        const [itemAtualizado] = await context.read({id:novoItem.id})
+
+        //Dess forma eu garanto que a função seja rodada e a mudança verificada
+        assert.deepEqual(result, 1)
+        assert.deepEqual(itemAtualizado.nome,novoItem.nome) 
     })
-    // it('Postgres DELETE Test', async () => {
-    //     const result = await context.delete()
-    //     assert.equal(result, true)
-    // })
+    it('Postgres DELETE Test', async () => {
+        const [remove] = await context.read({})
+        const result = await context.delete(remove.id)
+        assert.deepEqual(result, 1)
+    })
 
 })

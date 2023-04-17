@@ -58,24 +58,23 @@ class Postgres extends ICrud {
     }
 
     async create(item) {
-        const {dataValues} = await this._herois.create(item)
+        const { dataValues } = await this._herois.create(item)
         return dataValues
     }
 
-    async read(item={}) {
-        return this._herois.findAll({where:item, raw:true})
+    async read(item = {}) {
+        return this._herois.findAll({ where: item, raw: true })
     }
 
-    async update(item,id) {
-        console.log('item',item)
-        console.log('id',id)
-        // Por terminar :
-        const result = await this._herois.update(item, { where: {id:id}})
-        console.log('----->',result)
+    async update(item, id) {
+        const result = await this._herois.update({ nome: item.nome, poder: item.poder }, { where: { id: id } })
+        return result
     }
 
-    delete(id) {
-        console.log("O item foi deletado no Postgres")
+    async delete(id) {
+        const query = id ? { id: id } : {}
+        const result = await this._herois.destroy({ where: query })
+        return result
     }
 }
 
