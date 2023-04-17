@@ -3,7 +3,7 @@ class NotImplementedException extends Error {
         super("Not Implemented Exception")
     }
 }
-
+// Erro da exceção
 class ICrud{
     create(item){
         throw new NotImplementedException()
@@ -18,6 +18,9 @@ class ICrud{
         throw new NotImplementedException()
     }
     isConnected(){
+        throw new NotImplementedException()
+    }
+    connect(){
         throw new NotImplementedException()
     }
 }
