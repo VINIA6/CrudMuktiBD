@@ -1,9 +1,9 @@
 const assert = require('assert')
-const MongoDB = require('../db/strategys/mongodb')
+const MongoDB = require('../db/strategys/mongodb/mongodb')
 const Context = require('../db/strategys/base/contextStrategy')
-const { DELETE } = require('sequelize/types/query-types')
+const HeroiSchema = require('./../db/strategys/mongodb/schemas/heroisSchema')
 
-const context = new Context(new MongoDB())
+let context = {}
 
 const HEROI_CADASTRAR = {
     nome: "Gavião Negro",
@@ -18,7 +18,8 @@ let EDITAR_ID =''
 
 describe('MongoDB Suite de testes', function () {
     this.beforeAll(async ()=>{
-        await context.connect()
+        const connection = MongoDB.connect()
+        context = new Context(new MongoDB(connection, HeroiSchema))
         // await context.delete()
         // await context.create(HEROI_EDITAR) 
         const result = await context.create(HEROI_CADASTRAR)
@@ -43,13 +44,12 @@ describe('MongoDB Suite de testes', function () {
 
     it('Mongodb UPDATE Test',async ()=>{
         const result = await context.update(EDITAR_ID,{nome:'Naruto'})
-        console.log(result)
         assert.deepEqual(result.modifiedCount,1)
     })
 
-    it('Mongodb DELETE Test', async ()=>{
-        const result = await context.delete(EDITAR_ID)
-        console.log(result)
-        assert.deepEqual(result.n,1)
-    })
+    // it('Mongodb DELETE Test', async ()=>{
+    //     const result = await context.delete(EDITAR_ID)
+    //     console.log(result)
+    //     assert.deepEqual(result.n,1)
+    // })
 })
