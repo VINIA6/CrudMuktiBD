@@ -1,5 +1,4 @@
 // npm install mongoose
-const { default: mongoose } = require('mongoose')
 const Mongoose = require('mongoose')
 
 try {
@@ -34,7 +33,7 @@ const heoriSchema = new Mongoose.Schema({
     }
 })
 
-const model = mongoose.model('herois',heoriSchema)
+const model = Mongoose.model('herois',heoriSchema)
 
 async function main() {
     const resultCadastrar = await model.create(
@@ -45,8 +44,8 @@ async function main() {
     )
     console.log('Result Cadastrar: ',resultCadastrar)
 
-    const listItens = await model.find()
-    console.log('Items',listItens)
+    // const listItens = await model.find()
+    // console.log('Items',listItens)
     
 }
 

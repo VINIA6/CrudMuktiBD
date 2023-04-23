@@ -9,9 +9,10 @@ const Status = {
 }
 
 class MongoDB extends ICrud {
+
     constructor() {
         super()
-        this._herois = null
+        this._model = null
         this._driver = null
     }
 
@@ -21,7 +22,7 @@ class MongoDB extends ICrud {
         if (state === 'Conectado') return state
         if (state !== 'Conectando') return state
 
-        // await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise(resolve => setTimeout(resolve, 1000))
 
         return Status[this._driver.readyState]
     }
@@ -36,14 +37,16 @@ class MongoDB extends ICrud {
             handleError('Falha na conexão', error)
         }
 
-        const connetion = Mongoose.connection
-        this._driver = connetion
-        connetion.on('open', () => console.log('Database running...'))
+        const connection =  Mongoose.connection
+        this._driver = connection
+        connection.once('open', () => console.log('Database running...'))
+        await this.defineModel() 
         
     }
 
     async defineModel() {
-        heoriSchema= new Mongoose.Schema({
+    
+        const heroiSchema = new Mongoose.Schema({
             nome: {
                 type: String,
                 required: true
@@ -58,24 +61,26 @@ class MongoDB extends ICrud {
             }
         })
 
-        this._herois = mongoose.model('herois', heoriSchema)
+        Mongoose.models = {}
+        this._model =  Mongoose.model('herois', heroiSchema)
+
     }
 
-    async create(item) {
-        const resultCadastrar = await model.create(
-            item
-        )
-        console.log('Result Cadastrar: ', resultCadastrar)
-        console.log("O item foi salvo no MongoDB")
+    create(item) {    
+        return  this._model.create(item)
     }
-    read(item) {
-        console.log("Os items do MongoDB estão a seguir")
+
+
+    async read(item) {
+        return await this._model.find(item)
     }
-    update(id, item) {
-        console.log("O item foi alterado no MongoDB")
+
+    async update(id, item) {
+        return await this._model.updateOne({_id: id},{$set:item})
     }
-    delete(id) {
-        console.log("O item foi deletado no MongoDB")
+
+    async delete(id) {
+        return await this._model.deleteOne({ _id:id })
     }
 }
 
