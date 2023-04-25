@@ -43,15 +43,12 @@ class MongoDB extends ICrud {
         return connection
     }
 
-    
-
     create(item) {    
         return  this._schema.create(item)
     }
 
-
-    async read(item) {
-        return await this._schema.find(item)
+    async read(item,skip,limit) {
+        return await this._schema.find(item).skip(skip).limit(limit)
     }
 
     async update(id, item) {

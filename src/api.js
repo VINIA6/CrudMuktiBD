@@ -6,7 +6,7 @@ const ContextStrategy = require('./db/strategys/base/contextStrategy')
 const HeroRoute = require('./routes/heroRoutes')
 
 const app = new Hapi.server({
-    port: 3030,
+    port: 3000,
     host: 'localhost'
 });
 
