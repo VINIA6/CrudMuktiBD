@@ -1,49 +1,21 @@
-const BaseRoute = require('./base/baseRoute')
-const Joi = require('joi')
-class HeroRoutes extends BaseRoute{
-    constructor(db){
-        super()
-        this.db = db
+const express = require('express');
+const router = express.Router();
+const Context = require('.././db/strategys/base/contextStrategy')
+const MongoDb = require('.././db/strategys/mongodb/mongodb')
+const HeroiSchema = require('.././db/strategys/mongodb/schemas/heroisSchema')
+
+const connection = MongoDb.connect()
+const context = new Context(new MongoDb(connection, HeroiSchema))
+context.isConnected()
+
+router.get('/', async (req, res) => {
+    try {
+        const data = await context.read()
+        res.json(data)
+    } catch (error) {
+        console.error(err);
+        res.status(500).send('Erro ao buscar dados!');
     }
+})
 
-    list(){
-        return {
-            path:'/herois',
-            method:'GET',
-            
-            handler:(req,res)=>{
-
-                try {
-                    const {skip,limit,nome} = req.query
-                    // Validando
-                    let query = nome ? { nome:nome } : {}
-                    
-                    return this.db.read(query,parseInt(skip),parseInt(limit))
-                } catch (error) {
-                    console.log("Deu ruim", error)
-                    return "Error interno no servidor"
-                }
-                
-            },
-            // config: {
-            //     validate: {
-            //         //payload -> bory
-            //         //headers -> header
-            //         //params -> na URL :id
-            //         //query -> ?skip=10
-            //         // failAction: (request,headers,erro) => {
-            //         //     throw erro;
-            //         // },
-
-            //         query:{
-            //             skip: Joi.number().integer().default(0),
-            //             limit: Joi.number().integer().default(10),
-            //             nome: Joi.string().min(3).max(100)
-            //         }
-            //     }
-            // },
-        }
-    }
-}
-
-module.exports = HeroRoutes
+module.exports = router;

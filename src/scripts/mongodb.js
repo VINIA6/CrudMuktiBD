@@ -17,22 +17,22 @@
 // db.herois.find().limit(1000).sort({nome:-1})
 
 //create
-db.herois.insert({ 
-    nome: 'Flash', 
-    poder: 'Velocidade', 
-    dataNascimento: '1997-01-01' 
-})
+// db.herois.insert({ 
+//     nome: 'Flash', 
+//     poder: 'Velocidade', 
+//     dataNascimento: '1997-01-01' 
+// })
 
-//read
-db.herois.find()
+// //read
+// db.herois.find()
 
-//update
-db.herois.find()
-db.herois.update({_id:ObjectId("643d3f2ce61e0e13eb05d83f")},
-    {nome:'Goku'}
-)
-db.herois.update({_id:ObjectId("643d4098e61e0e13eb05d840")},
-    {$set:{nome:'Lanterna Verde'}}
-)
-//delete
-db.herois.remove({_id:ObjectId("643d3f2ce61e0e13eb05d83f")})
+// //update
+// db.herois.find()
+// db.herois.update({_id:ObjectId("643d3f2ce61e0e13eb05d83f")},
+//     {nome:'Goku'}
+// )
+// db.herois.update({_id:ObjectId("643d4098e61e0e13eb05d840")},
+//     {$set:{nome:'Lanterna Verde'}}
+// )
+// //delete
+// db.herois.remove({_id:ObjectId("643d3f2ce61e0e13eb05d83f")})

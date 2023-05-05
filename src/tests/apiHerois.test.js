@@ -1,7 +1,7 @@
 const assert = require('assert')
 const api = require('./../api')
-const MongoDB = require('../db/strategys/mongodb/mongodb')
-const Context = require('../db/strategys/base/contextStrategy')
+const MongoDB = require('./../db/strategys/mongodb/mongodb')
+const Context = require('./../db/strategys/base/contextStrategy')
 const HeroiSchema = require('./../db/strategys/mongodb/schemas/heroisSchema')
 const { isNull } = require('util')
 
@@ -12,10 +12,10 @@ describe('API Suite de testes', function () {
         app = await api
     })
     
-    it('Listar /herois', async () => {
+    it.only('Listar /herois', async () => {
         const result = await app.inject({
             method:'GET',
-            url:'/herois?skip=0&limit=0'
+            url:`/herois?skip=0&limit=0`
         })
 
         const dados = JSON.parse(result.payload)
