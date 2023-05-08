@@ -55,9 +55,9 @@ class MongoDB extends ICrud {
         return await this._schema.updateOne({_id: id},{$set:item})
     }
 
-    // async delete(id) {
-    //     return await this._schema.deleteOne({ _id:id })
-    // }
+    async delete(nome) {
+        return await this._schema.deleteOne({nome:nome})
+    }
 }
 
 module.exports = MongoDB

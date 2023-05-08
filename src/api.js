@@ -8,11 +8,11 @@ async function main() {
 
     app.use('/',routes)
     app.use('/herois',routes)
-    // app.use('/herois/:id',routes)
+    app.use('/herois/:id',routes)
 
     app.listen(port, () => {
         console.log(`Listening on port ${port}`)
-    })
+    })  
 
     return app
 }

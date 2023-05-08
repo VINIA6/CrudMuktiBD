@@ -2,6 +2,8 @@ const express = require('express');
 const Context = require('.././db/strategys/base/contextStrategy');
 const MongoDb = require('.././db/strategys/mongodb/mongodb');
 const HeroiSchema = require('.././db/strategys/mongodb/schemas/heroisSchema');
+const { object } = require('joi');
+const Joi = require('joi');
 
 
 const router = express.Router();
@@ -9,12 +11,19 @@ const connection = MongoDb.connect();
 const context = new Context(new MongoDb(connection, HeroiSchema));
 context.isConnected();
 
+function ValidateQuery(query){
+    const schema = Joi.object({
+        skip: Joi.number().required(),
+        limit: Joi.number().required(),
+    })
 
-router.post('/herois',express.json() ,async (req, res) => {
+    return schema.validate(query);
+}
+
+router.post('/herois', express.json(), async (req, res) => {
     try {
-        
-        const data = await context.create(req.body)
-        res.json(data)
+        const data = await context.create(req.body);
+        res.json(data);
 
     } catch (error) {
         console.error(error);
@@ -32,10 +41,22 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.get('/:nome', async (req, res) => {
+    try {
+        const { nome } = req.params
+
+        const data = await context.read({ nome: nome });
+        res.json(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao buscar dados!');
+    }
+})
+
 
 router.get('/herois', async (req, res) => {
     try {
-        const { skip, limit } = req.query;
+        const { skip, limit } = ValidateQuery(req.query);
         const data = await context.read({}, parseInt(skip), parseInt(limit));
         res.json(data);
     } catch (error) {
@@ -44,28 +65,37 @@ router.get('/herois', async (req, res) => {
     }
 })
 
-// router.post('/herois/:id', async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         let data = await context.read({ nome: id });
+router.put('/herois/:nome', express.json(), async (req, res) => {
+    try {
+        const { nome } = req.params;
+        let data = await context.read({ nome: nome });
 
-//         if (!data) {
-//             res.status(404).send('Usuário não encontrado.');
-//             return;
-//         }
+        if (!data) {
+            throw ('Usuário não encontrado.');
+        }
 
-//         console.log(data)
+        let dataUpdate = req.body;
 
-//         let data_update = req.body;
+        await context.update(data._id, dataUpdate);
 
-//         console.log(data_update);
+        res.send('Atualização feita com sucesso!');
 
-//         // res.send(data_update);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro na atualização!');
+    }
+})
 
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Erro na atualização do dado!');
-//     }
-// })
+router.delete('/herois/:nome',  express.json(), async (req, res) => {
+    try {
+        const { nome } = req.params;
+        await context.delete(nome);
+        res.send('Deletado com sucesso!');
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao deletar!');
+    }
+})
 
 module.exports = router;
